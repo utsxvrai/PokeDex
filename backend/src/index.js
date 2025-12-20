@@ -8,7 +8,10 @@ const app = express();
 const apiRoutes = require('./routes');
 
 
-app.use(cors());
+app.use(cors({
+    origin : "https://poke-dex-two-omega.vercel.app"
+}
+));
 app.use(express.json());
 async function startServer() {
     app.use('/api', apiRoutes);
