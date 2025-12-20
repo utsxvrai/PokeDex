@@ -6,12 +6,10 @@ class PokemonRepository extends CrudRepository {
     super(Pokemon);
   }
 
-  // Find Pokémon by pokemonId (from PokeAPI)
   async findByPokemonId(pokemonId) {
     return await Pokemon.findOne({ pokemonId });
   }
 
-  // Search by name or type (basic search)
   async searchByNameOrType(query) {
     return await Pokemon.find({
       $or: [
@@ -21,12 +19,9 @@ class PokemonRepository extends CrudRepository {
     });
   }
 
-  // Filter Pokémon by type
   async findByType(type) {
     return await Pokemon.find({ types: type });
   }
-
-  // Get Pokémon without description (for offline scripts)
   async findWithoutDescription() {
     return await Pokemon.find({
       descriptionGenerated: false
