@@ -81,16 +81,16 @@ async function getPokemonByPokemonId(req, res) {
 
 async function searchPokemon(req, res) {
   try {
-    const { q } = req.query;
+    const { query } = req.query;
 
-    if (!q) {
+    if (!query) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: 'Search query is required'
       });
     }
 
-    const pokemons = await pokemonRepository.searchByNameOrType(q);
+    const pokemons = await pokemonRepository.searchByNameOrType(query);
 
     return res.status(StatusCodes.OK).json({
       success: true,

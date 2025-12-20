@@ -11,12 +11,11 @@ class PokemonRepository extends CrudRepository {
   }
 
   async searchByNameOrType(query) {
-    return await Pokemon.find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { types: { $regex: query, $options: 'i' } }
-      ]
-    });
+    // This now uses your text index across name, types, and description
+    return await Pokemon.find(
+      { $text: { $search: query } },
+      { score: { $meta: "textScore" } } // Optional: helps sort by relevance
+    ).sort({ score: { $meta: "textScore" } });
   }
 
   async findByType(type) {

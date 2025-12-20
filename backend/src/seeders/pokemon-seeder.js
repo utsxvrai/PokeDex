@@ -2,10 +2,9 @@ require('dotenv').config();
 const axios = require('axios');
 const mongoose = require('mongoose');
 
-const PokemonRepository = require('../repositories/pokemon-repository');
-const connectDB = require('../config/database'); // adjust if path differs
+const { PokemonRepository } = require('../repositories');
+const connectDB = require('../config/db-config'); // adjust if path differs
 
-const pokemonRepository = new PokemonRepository();
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 const LIMIT = 50; // safe batch size
@@ -43,6 +42,8 @@ async function seedPokemons() {
 
     let offset = 0;
     let hasMore = true;
+
+    const pokemonRepository = new PokemonRepository();
 
     while (hasMore) {
       console.log(`📦 Fetching Pokémon batch: offset=${offset}`);
