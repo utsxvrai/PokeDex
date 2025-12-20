@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { pokemonService } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PokemonGrid = ({ onSelect, searchResults }) => {
   const [pokemons, setPokemons] = useState([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const itemsPerPage = 20; // 4x5 grid
 
   useEffect(() => {
     if (searchResults) {
       setPokemons(searchResults);
+      setTotal(searchResults.length);
       setPage(0);
     } else {
-      fetchPokemons();
-      setPage(0);
+      fetchPokemons(page);
     }
-  }, [searchResults]);
+  }, [searchResults, page]);
 
-  const fetchPokemons = async () => {
+  const fetchPokemons = async (currentPage) => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/pokemon');
-      setPokemons(response.data.data);
+      const response = await pokemonService.getPokemons(currentPage);
+      setPokemons(response.data);
+      setTotal(response.total || 0);
     } catch (error) {
       console.error('Failed to fetch pokemons:', error);
     }
   };
 
-  const totalPages = Math.ceil(pokemons.length / itemsPerPage);
-  const paginatedItems = pokemons.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  const totalPages = Math.ceil(total / itemsPerPage);
+  const paginatedItems = pokemons; // Server handles the slicing now
 
   return (
     <div className="flex flex-col h-full uppercase">

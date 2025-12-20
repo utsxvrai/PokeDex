@@ -10,12 +10,15 @@ const apiRoutes = require('./routes');
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', apiRoutes);
+async function startServer() {
+    app.use('/api', apiRoutes);
 
+    await connectDB();
 
-connectDB();
+    app.listen(ServerConfig.PORT, () => {
+        console.log(`Listening on port ${ServerConfig.PORT}`);
+        Logger.info("Successfully started the Server", {});
+    });
+}
 
-app.listen(ServerConfig.PORT, () => {
-    console.log(`Listening on port ${ServerConfig.PORT}`);
-    Logger.info("Successfully started the Server", {});
-});
+startServer();

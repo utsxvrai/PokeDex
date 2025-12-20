@@ -37,11 +37,14 @@ async function getPokemonById(req, res) {
 
 async function getAllPokemons(req, res) {
   try {
-    const pokemons = await PokemonService.getAllPokemons();
+    const { limit, skip } = req.query;
+    const pokemons = await PokemonService.getAllPokemons({}, { limit, skip });
+    const total = await PokemonService.countPokemons({});
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      data: pokemons
+      data: pokemons,
+      total: total
     });
   } catch (error) {
     throw error;
@@ -68,7 +71,7 @@ async function getPokemonByPokemonId(req, res) {
 
 async function searchPokemon(req, res) {
   try {
-    const { query } = req.query;
+    const { query, mode } = req.query;
 
     if (!query) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -77,7 +80,7 @@ async function searchPokemon(req, res) {
       });
     }
 
-    const pokemons = await PokemonService.searchPokemon(query);
+    const pokemons = await PokemonService.searchPokemon(query, mode);
 
     return res.status(StatusCodes.OK).json({
       success: true,

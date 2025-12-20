@@ -28,9 +28,9 @@ async function getPokemonById(id) {
 }
 
 // get all pokemon (list page)
-async function getAllPokemons(filter = {}) {
+async function getAllPokemons(filter = {}, options = {}) {
     try {
-        const pokemon = await pokemonRepository.getAll(filter);
+        const pokemon = await pokemonRepository.getAll(filter, options);
         return pokemon;
     } catch (error) {
         throw error;
@@ -58,15 +58,14 @@ async function getPokemonByPokemonId(pokemonId) {
 // }
 
 
-async function searchPokemon(queryText) {
+async function searchPokemon(queryText, mode = 'keyword') {
   try {
-    // 1. Generate the embedding (Meaning) using Gemini
-    const queryVector = await geminiHelper.getEmbedding(queryText);
-
-    // 2. Call repository to perform the actual DB search
-    const results = await pokemonRepository.hybridSearch(queryVector);
-
-    return results;
+    if (mode === 'semantic') {
+      const queryVector = await geminiHelper.getEmbedding(queryText);
+      return await pokemonRepository.hybridSearch(queryVector);
+    } else {
+      return await pokemonRepository.searchByNameOrType(queryText);
+    }
   } catch (error) {
     throw error;
   }
@@ -92,6 +91,14 @@ async function getPokemonsWithoutDescription() {
     }
 }
 
+async function countPokemons(filter = {}) {
+    try {
+        return await pokemonRepository.count(filter);
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     createPokemon,
     getPokemonById,
@@ -99,7 +106,8 @@ module.exports = {
     getPokemonByPokemonId,
     searchPokemon,
     getPokemonByType,
-    getPokemonsWithoutDescription
+    getPokemonsWithoutDescription,
+    countPokemons
 }
 
 

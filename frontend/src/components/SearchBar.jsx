@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { pokemonService } from '../services/api';
 
 const SearchBar = ({ onSearchResults }) => {
   const [query, setQuery] = useState('');
@@ -15,10 +15,8 @@ const SearchBar = ({ onSearchResults }) => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/pokemon/search`, {
-        params: { query, mode }
-      });
-      onSearchResults(response.data.data);
+      const response = await pokemonService.searchPokemons(query, mode);
+      onSearchResults(response.data);
     } catch (error) {
       console.error('Search failed:', error);
     } finally {

@@ -26,8 +26,9 @@ class CrudRepository {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, error.message);
         }
     }
-    async getAll(filter = {}) {
-        const response = await this.model.find(filter);
+    async getAll(filter = {}, options = {}) {
+        const { limit = 20, skip = 0 } = options;
+        const response = await this.model.find(filter).limit(Number(limit)).skip(Number(skip));
         return response;
     }
 
@@ -51,6 +52,14 @@ class CrudRepository {
                 throw new AppError(StatusCodes.NOT_FOUND, 'Record not found');
             }
             return deletedRecord;
+        } catch (error) {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, error.message);
+        }
+    }
+
+    async count(filter = {}) {
+        try {
+            return await this.model.countDocuments(filter);
         } catch (error) {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, error.message);
         }
