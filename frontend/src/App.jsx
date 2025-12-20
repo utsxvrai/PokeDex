@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bgImage from './assets/wp.jpg';
 import PokemonGrid from './components/PokemonGrid';
 import SearchBar from './components/SearchBar';
 import PokemonDetail from './components/PokemonDetail';
@@ -12,7 +13,7 @@ function App() {
       {/* Background Asset */}
       <div 
         className="fixed top-0 left-0 w-full h-full bg-cover bg-center -z-10 blur-[1.5px] brightness-[1]"
-        style={{ backgroundImage: "url('./src/assets/wp.jpg')" }}
+        style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
       
       <main className="flex w-full h-full">
