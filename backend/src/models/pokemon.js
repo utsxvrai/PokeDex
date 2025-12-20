@@ -70,12 +70,18 @@ const pokemonSchema = new mongoose.Schema(
     descriptionGenerated: {
       type: Boolean,
       default: false
-    }
+    },
+    descriptionVector: {
+      type: [Number], // Array of 768 or 3072 numbers (depending on your Gemini settings)
+      required: false
+    },
   },
   {
     timestamps: true
   }
 );
+
+    
 
 // Full-text search index
 pokemonSchema.index({

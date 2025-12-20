@@ -1,36 +1,29 @@
 const { StatusCodes } = require('http-status-codes');
-const { PokemonRepository } = require('../repositories');
-const { AppError } = require('../utils/errors/app-error');
+const { PokemonService } = require('../services');
 
-const pokemonRepository = new PokemonRepository();
+
 
 
 async function createPokemon(req, res) {
   try {
-    const pokemon = await pokemonRepository.create(req.body);
+    const pokemon = await PokemonService.createPokemon(req.body);
     return res.status(StatusCodes.CREATED).json({
       success: true,
       data: pokemon,
       message: 'Pokemon created successfully'
     });
   } catch (error) {
-    throw new AppError(
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      error.message
-    );
+    throw error;
   }
 }
 
 async function getPokemonById(req, res) {
   try {
     const { id } = req.params;
-    const pokemon = await pokemonRepository.get(id);
+    const pokemon = await PokemonService.getPokemonById(id);
 
     if (!pokemon) {
-      throw new AppError(
-        StatusCodes.NOT_FOUND,
-        'Pokemon not found'
-      );
+      throw new Error('Pokemon not found');
     }
 
     return res.status(StatusCodes.OK).json({
@@ -44,30 +37,24 @@ async function getPokemonById(req, res) {
 
 async function getAllPokemons(req, res) {
   try {
-    const pokemons = await pokemonRepository.getAll();
+    const pokemons = await PokemonService.getAllPokemons();
 
     return res.status(StatusCodes.OK).json({
       success: true,
       data: pokemons
     });
   } catch (error) {
-    throw new AppError(
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      error.message
-    );
+    throw error;
   }
 }
 
 async function getPokemonByPokemonId(req, res) {
   try {
     const { pokemonId } = req.params;
-    const pokemon = await pokemonRepository.findByPokemonId(Number(pokemonId));
+    const pokemon = await PokemonService.getPokemonByPokemonId(Number(pokemonId));
 
     if (!pokemon) {
-      throw new AppError(
-        StatusCodes.NOT_FOUND,
-        'Pokemon not found'
-      );
+      throw new Error('Pokemon not found');
     }
 
     return res.status(StatusCodes.OK).json({
@@ -90,17 +77,14 @@ async function searchPokemon(req, res) {
       });
     }
 
-    const pokemons = await pokemonRepository.searchByNameOrType(query);
+    const pokemons = await PokemonService.searchPokemon(query);
 
     return res.status(StatusCodes.OK).json({
       success: true,
       data: pokemons
     });
   } catch (error) {
-    throw new AppError(
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      error.message
-    );
+    throw error;
   }
 }
 
@@ -108,34 +92,28 @@ async function searchPokemon(req, res) {
 async function getPokemonByType(req, res) {
   try {
     const { type } = req.params;
-    const pokemons = await pokemonRepository.findByType(type);
+    const pokemons = await PokemonService.getPokemonByType(type);
 
     return res.status(StatusCodes.OK).json({
       success: true,
       data: pokemons
     });
   } catch (error) {
-    throw new AppError(
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      error.message
-    );
+    throw error;
   }
 }
 
 
 async function getPokemonsWithoutDescription(req, res) {
   try {
-    const pokemons = await pokemonRepository.findWithoutDescription();
+    const pokemons = await PokemonService.getPokemonsWithoutDescription();
 
     return res.status(StatusCodes.OK).json({
       success: true,
       data: pokemons
     });
   } catch (error) {
-    throw new AppError(
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      error.message
-    );
+    throw error;
   }
 }
 

@@ -2,7 +2,7 @@ require('dotenv').config();
 const connectDB = require('../config/db-config');
 
 const {PokemonRepository} = require('../repositories');
-const { generateDescription } = require('./description-generator');
+const { generateDescription } = require('../utils/description-generator');
 
 const pokemonRepository = new PokemonRepository();
 

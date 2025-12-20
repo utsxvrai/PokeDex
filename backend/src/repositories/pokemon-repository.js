@@ -18,6 +18,21 @@ class PokemonRepository extends CrudRepository {
     ).sort({ score: { $meta: "textScore" } });
   }
 
+  async hybridSearch(vector) {
+    return await Pokemon.aggregate([
+    {
+      "$vectorSearch": {
+        "index": "vector_index", 
+        "path": "descriptionVector",
+        "queryVector": vector,
+        "numCandidates": 100,
+        "limit": 10
+      }
+    }
+    // Add additional $project or $rankFusion stages here
+    ]);
+  }
+
   async findByType(type) {
     return await Pokemon.find({ types: type });
   }
@@ -26,6 +41,8 @@ class PokemonRepository extends CrudRepository {
       descriptionGenerated: false
     });
   }
+
+
 }
 
 module.exports = PokemonRepository;
