@@ -34,24 +34,24 @@ const PokemonGrid = ({ onSelect, searchResults }) => {
   return (
     <div className="flex flex-col h-full uppercase">
       {/* 4x5 Grid Viewport */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative overflow-y-auto pr-1">
         <AnimatePresence mode="wait">
           <motion.div
             key={page}
-            initial={{ y: 1000, opacity: 0 }}
+            initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -1000, opacity: 0 }}
+            exit={{ y: -50, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="grid grid-cols-4 grid-rows-5 gap-3 w-full h-full"
+            className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2 lg:gap-3 w-full"
           >
             {paginatedItems.map(p => (
               <div 
                 key={p.pokemonId} 
-                className="bg-[#f8f8f8] border-[4px] border-black flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 p-1"
+                className="bg-[#f8f8f8] border-[3px] lg:border-[4px] border-black flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 p-2 aspect-square"
                 onClick={() => onSelect(p)}
               >
                 <img src={p.image} alt={p.name} className="w-4/5 h-4/5 object-contain" />
-                <span className="font-bold text-[8px] mt-1 text-center truncate w-full px-1">{p.name}</span>
+                <span className="font-bold text-[10px] lg:text-[12px] mt-1 text-center truncate w-full px-1">{p.name}</span>
               </div>
             ))}
           </motion.div>
